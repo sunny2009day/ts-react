@@ -4,5 +4,4 @@ export default class Tabs extends React.Component {
     return <div>Tabs</div>
   }
 }
-
-ssss 
+ 
