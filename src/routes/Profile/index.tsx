@@ -5,7 +5,7 @@ import {TypeProfile} from '../../store/reducers/profile';
 import actions from '../../store/actions/home';
 import { RouteComponentProps} from 'react-router';
 
-import { Descriptions, Button } from 'antd';
+import { Descriptions, Button, Alert } from 'antd';
 import NavHeader from '../../components/NavHeader'
 import './index.less';
 interface IState {
@@ -26,7 +26,7 @@ class Profile extends React.Component<Props, State>{
     let content; // 存放要渲染的内容
     if(/*用户未验证*/ false){ 
       return null;
-    }else if(/*已登录*/true) { 
+    }else if(/*已登录*/false) { 
       content = (
         <div className="user-info">
           <Descriptions title="当前登录用户">
@@ -37,12 +37,23 @@ class Profile extends React.Component<Props, State>{
           <Button type="danger">退出登录</Button>
         </div>
       )
+    } else /*如果当前的用户未登录*/ {
+      content = (
+        <>
+         <Alert type="warning" message="当前未登录" description="您好，
+         当前尚未登录,请注册或登录"/>
+         <div style={{textAlign:"center",padding: '.5rem'}}></div>
+         <Button type="dashed" onClick={()=>this.props.history.push('/Login')}>登录</Button>
+         <Button type="dashed" onClick={()=>this.props.history.push('/Register')}
+         style={{marginLeft: '.5rem'}}>注册</Button>
+        </>
+      )
     }
 
     return (
      (
        <section>
-         <NavHeader>个人中心</NavHeader>
+         <NavHeader history={this.props.history}>个人中心</NavHeader>
          {content}
        </section>
      )

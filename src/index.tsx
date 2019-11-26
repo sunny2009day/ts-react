@@ -12,6 +12,9 @@ import Home from './routes/Home';
 import Profile from './routes/Profile';
 import Mine from './routes/Mine';
 
+import Login from './routes/Login';
+import Register from './routes/Register';
+
 import Tabs from './components/Tabs';
 ReactDOM.render((
   <Provider store={store}>
