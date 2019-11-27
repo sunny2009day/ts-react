@@ -1,3 +1,3 @@
 module.exports = {
-  url: 'mongodb://127.0.0.1/graphql'
+  url: 'mongodb://172.16.160.230:27017/graphql'
 }

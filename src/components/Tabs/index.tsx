@@ -9,8 +9,8 @@ export default class Tabs extends React.Component {
     return (
       <footer>
         <NavLink to="/" exact><Icon type="home"></Icon><span>首页</span></NavLink>
-        <NavLink to="/mine"><Icon type="home"></Icon><span>我的课程</span></NavLink>
-        <NavLink to="/profile"><Icon type="home"></Icon><span>购物中心</span></NavLink>
+        <NavLink to="/mine"><Icon type="solution"></Icon><span>我的课程</span></NavLink>
+        <NavLink to="/profile"><Icon type="user"></Icon><span>购物中心</span></NavLink>
       </footer>
     )
   }

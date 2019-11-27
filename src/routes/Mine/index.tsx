@@ -14,7 +14,7 @@ type DispatchProps = typeof actions;
 interface IParams {};
 type RouteProps =  RouteComponentProps<IParams>;
 type Props = StateProps&DispatchProps&RouteProps&{
-  chiLdren?: any
+  children?: any
 }
 type State = any;
 

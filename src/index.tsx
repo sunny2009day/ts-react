@@ -25,6 +25,8 @@ ReactDOM.render((
             <Route path="/" exact component={Home} />
             <Route path="/mine" exact component={Mine} />
             <Route path="/profile" exact component={Profile} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/register" exact component={Register} />
             <Redirect to="/" />
           </Switch>
         </main>

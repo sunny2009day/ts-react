@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 
 let {url} = require('./setting.js');
 
-let conn = mongoose.createConnection(url);
+let conn = mongoose.createConnection(url, {useUnifiedTopology: true, useNewUrlParser: true});
 
 let UserSchema = new mongoose.Schema({
   username: String,
