@@ -1,8 +1,14 @@
-import * as types from "../action-types";
+import * as TYPES from "../action-types";
 import { TypeAction } from "../../typings/common";
-
+import { getSliders } from '../../api/home';
 export default {
   setCurrentCategory(payload: string):TypeAction {
-    return {type: types.SET_CURRENT_CATEGORY, payload }
+    return {type: TYPES.SET_CURRENT_CATEGORY, payload }
+  },
+  getSliders(): TypeAction{
+    return {
+      type: TYPES.GET_SLIDERS,
+      payload: getSliders()
+    }
   }
 }

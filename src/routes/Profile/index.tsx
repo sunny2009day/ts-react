@@ -44,7 +44,7 @@ class Profile extends React.Component<Props>{
        this.setState({
          loading: false,
          imageUrl: data
-       })
+       }, ()=>this.props.changeAvatar(data))
      } else {
        message.error(error);
      }
@@ -68,7 +68,8 @@ class Profile extends React.Component<Props>{
               listType ="picture-card" 
               className="avatar-uploader"
               showUploadList = {false}
-              action ="http://127.0.0.1/uploadAvatar"
+              withCredentials = {true}
+              action ="http://localhost:9000/api/uploadAvatar"
               beforeUpload = {beforeUpload}
               data = {{userId: user._id}}
               onChange = {this.handleChange}

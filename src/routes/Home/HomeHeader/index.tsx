@@ -40,7 +40,7 @@ export default class HomeHeader extends React.Component<props, State> {
     return (
       <div className="home-header">
         <div className="header-logo">
-          <img src="http://img.zhufengpeixun.cn/zfkelogo.png" />
+          <img src="https://secure.gravatar.com/avatar/undefined?s=48" />
           <Icon type="bars" onClick={()=>this.setState({in: !this.state.in})} />
         </div>
         <Transition in={this.state.in} timeout = {duration}>

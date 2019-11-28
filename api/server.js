@@ -2,30 +2,32 @@ let express = require('express');
 let bodyParser = require('body-parser');
 let session = require('express-session');
 let MongoStore = require('connect-mongo')(session);
-let {User} = require('./db');
+let {User, Slider, Lesson} = require('./db');
 let app = express();
 let path = require('path');
 let {md5} = require('./utils.js');
 let multer = require('multer');
-
+ 
 let upload = multer({ dest: path.join(__dirname, 'public')});
 let cors = require('cors');
 // app.use((req, res, next)=>{
 //   res.setHead('Access-Control-Allow-Origin', '*');
 //   next();
 // });
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   cors({
-    origin:["http://127.0.0.1:8080"],
+    origin:["http://127.0.0.1:8080", "http://localhost:8080"],
     credentials: true, // 是否允许跨域,发cookie
-    allowedHeaders: 'Content-Type',
+    allowedHeaders: 'Content-Type,x-requested-with',
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
   })
 )
 let {url} = require('./setting.js');
 
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true })); 
+// true: 使用第三方模块qs来处理; false: 使用系统模块querystring来处理
 app.use(bodyParser.json());
 app.use(session({
   resave: true,
@@ -52,11 +54,14 @@ app.use(function (req, res, next) {
 });
 
 
-app.post('/uploadAvatar', upload.single('avatar'),  (req, res)=>{
-  
-  let avatar = `http://localhost:9000/${req.file.filename}`;
-  User.findByIdAndUpdate(req.body.userId, {avatar})
-  res.success(avatar)
+app.post('/api/uploadAvatar', upload.single('avatar'), async(req, res)=>{
+    let avatar = `http://localhost:9000/${req.file.filename}`;
+    await User.findByIdAndUpdate(req.body.userId, {avatar});
+    if(req.session.user&&req.session.user.avatar) {
+      req.session.user.avatar = avatar;
+    }
+    req.session.user.avatar = avatar;
+    res.success(avatar)
 })
 // 验证用户登录
 app.post('/api/register', async(req,res)=>{
@@ -92,8 +97,25 @@ app.post('/api/logout', async(req,res)=>{
   req.session.user = null;
   res.success('退出登录成功');
 });
+
+app.post('/api/getSliders', async(req,res)=>{
+ 
+  let sliders = await Slider.find();
+  console.log(sliders)
+  res.success(sliders);
+});
+app.post('/api/getLessons', async(req,res)=>{
+  let { category = 'all', offset = 0, limit = 5} = req.query;
+  let query = {};
+  if(category !='all') {
+    query['category'] = category;
+  }
+  let list = await Lesson.find(query).sort({order: 1})
+  .skip(offset);
+  res.success(list);
+});
+
 app.get('/api/validate', async(req,res)=>{
-  console.log(User);
   if(req.session.user) {
     res.json({
       code: 0,
