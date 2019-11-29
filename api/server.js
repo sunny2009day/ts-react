@@ -5,7 +5,7 @@ let MongoStore = require('connect-mongo')(session);
 let {User, Slider, Lesson} = require('./db');
 let app = express();
 let path = require('path');
-let {md5} = require('./utils.js');
+let { md5 } = require('./utils.js');
 let multer = require('multer');
  
 let upload = multer({ dest: path.join(__dirname, 'public')});
@@ -50,7 +50,6 @@ app.use(function (req, res, next) {
   } else {
     next();
   }
-
 });
 
 
@@ -61,7 +60,7 @@ app.post('/api/uploadAvatar', upload.single('avatar'), async(req, res)=>{
       req.session.user.avatar = avatar;
     }
     req.session.user.avatar = avatar;
-    res.success(avatar)
+    res.success(avatar);
 })
 // 验证用户登录
 app.post('/api/register', async(req,res)=>{
@@ -98,21 +97,26 @@ app.post('/api/logout', async(req,res)=>{
   res.success('退出登录成功');
 });
 
-app.post('/api/getSliders', async(req,res)=>{
+app.get('/api/getSliders', async(req,res)=>{
  
   let sliders = await Slider.find();
-  console.log(sliders)
   res.success(sliders);
 });
-app.post('/api/getLessons', async(req,res)=>{
-  let { category = 'all', offset = 0, limit = 5} = req.query;
+app.get('/api/getLessons', async(req,res)=>{
+  /**
+   * @param offset 偏移量每次要获取条数 offset<limit
+   * @param limit 每页显示的条数
+   */
+  let { category = 'all', offset = 2, limit = 5} = req.query;
   let query = {};
   if(category !='all') {
     query['category'] = category;
   }
-  let list = await Lesson.find(query).sort({order: 1})
-  .skip(offset);
-  res.success(list);
+  let list = await Lesson.find(query).sort({order: 1}).skip(offset);
+  let total = await  Lesson.count(query);
+  // 0 + 5 10
+  let hasMore = offset + list.length < total;
+  res.success({list, hasMore});
 });
 
 app.get('/api/validate', async(req,res)=>{

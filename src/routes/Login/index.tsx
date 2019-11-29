@@ -29,8 +29,7 @@ type State = any;
       if(err){
          message.error(err)
       }else {
-        console.log(values);
-        await this.props.login(values);
+          this.props.login(values);
       }
     }) 
   }

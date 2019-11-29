@@ -10,16 +10,15 @@ import NavHeader from '../../components/NavHeader';
 import LOGIN_TYPES from "../../typings/login-types";
 import './index.less';
  
-// 当前组件有三个属性来源 1.mapstateToProps 2.actionns对象的返回值 3.来自路由 4.用户传入进来的其他属性
+// 当前组件有三个属性来源 1.mapStateToProps 2.actions对象的返回值 3.来自路由 4.用户传入进来的其他属性
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof actions;
 interface IParams {};
 type RouteProps =  RouteComponentProps<IParams>;
-type Props = StateProps&DispatchProps&RouteProps&{
+type Props = StateProps&RouteProps&DispatchProps&{
   children?: any
 }
-type State = any;
-
+ 
 class Profile extends React.Component<Props>{
   state = {
     loading: false,
@@ -34,17 +33,12 @@ class Profile extends React.Component<Props>{
    if(info.file.status === 'uploading') {
      this.setState({loading: true});
    } else if(info.file.status == 'done'){
-     console.log(info.file)
-    //  this.setState({
-    //    loading: false,
-    //    imageUrl: info.file.response.url
-    //  })
      let {code, data, error} = info.file.response; // 获取接口的响应体
      if(code === 0) {
        this.setState({
          loading: false,
          imageUrl: data
-       }, ()=>this.props.changeAvatar(data))
+       }, ()=> this.props.changeAvatar(data))
      } else {
        message.error(error);
      }
@@ -52,11 +46,7 @@ class Profile extends React.Component<Props>{
   }
   render() {
     let { user } = this.props;
-    let content; // 存放要渲染的内容
-
-    // if(/*用户未验证*/ this.props.loginState == LOGIN_TYPES.UN_VALIDATE){ 
-    //   return  null;
-    // }else 
+    let content; // 存放要渲染的内容 
     if(/*已登录*/this.props.loginState == LOGIN_TYPES.LOGINED) { 
       let imageUrl = this.state.imageUrl || user.avatar; 
       content = (
@@ -108,10 +98,12 @@ class Profile extends React.Component<Props>{
     }
     return (
      (
-       <section>
+      <React.Fragment>
+         <section>
          <NavHeader history={this.props.history}>个人中心</NavHeader>
          {content}
        </section>
+      </React.Fragment>
      )
     )
   }
@@ -119,11 +111,11 @@ class Profile extends React.Component<Props>{
 
 let mapStateToProps = (state: TypeRootState): TypeProfile => state.profile
 
-
+ 
 export default connect(
   mapStateToProps, 
   actions
-)(Profile); // 我去视频中也有报错
+)(Profile); // 我去,视频中也有报错
 
 function beforeUpload(file: any) {
   console.log(file.type);

@@ -9,5 +9,5 @@ export interface TypeAnyObject {
   [propName: string]: any
  }
 export interface TypeThunkFunction {
-  (dispatch: Dispatch, getState: Store['getState']): void
+  (dispatch: Dispatch, getState: Store['getState']): any
 }

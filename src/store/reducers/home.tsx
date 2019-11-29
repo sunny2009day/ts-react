@@ -6,12 +6,13 @@ export interface Sliders{
 }
 
 export interface Lesson {
+  _id: string,
   order: number,//顺序
   title: string,//标题
   video: string,//视频
   poster: string, //海报
   url: string,//url地址
-  price: number,//价格
+  price: string,//价格
   category: string,//分类 all react vue 
 }
 export interface Lessons {
@@ -40,13 +41,21 @@ let initialState:TypeHome = {
 /**
  * TypeAction 在多个模块都引用
  */
-export default function(state: TypeHome = initialState, 
-  action: TypeAction): TypeHome {
+export default function(state: TypeHome = initialState, action: TypeAction): TypeHome {
   switch(action.type) {
     case types.SET_CURRENT_CATEGORY: 
      return {...state, currentCategory: action.payload};
      case types.GET_SLIDERS: 
      return {...state, sliders: action.payload.data};
+     case types.SET_LESSONS_LOADING: 
+     return {...state, lessons: {...state.lessons, loading: action.payload}};
+     case types.SET_LESSONS: 
+     return {...state, lessons: {...state.lessons, 
+       loading: false,
+       list: [...state.lessons.list, ...action.payload.list],
+       hasMore: action.payload.hasMore,
+       offset: state.lessons.offset + action.payload.list.length // 上次的偏移量加上这次返回的长度
+      }};
     default: 
     return state
   }
